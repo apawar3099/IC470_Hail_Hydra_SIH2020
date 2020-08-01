@@ -1,0 +1,1 @@
+Login Page: For the user to login into the server. It is a simple enter mail and password page. Also a new user can click on register in order to register. 
