@@ -1,11 +1,11 @@
 <?php
 
-$p='http://localhost/HACKCOVID';
+$p='http://localhost/sih';
 
 $salt1='';
 $salt2='';
 
-$headers = "From: admin@hakvilla.000webhostapp.com";
+$headers = "From: admin@water.coolpage.biz";
 
 session_start();
 
