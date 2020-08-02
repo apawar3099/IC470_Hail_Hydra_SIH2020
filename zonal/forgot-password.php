@@ -3,12 +3,12 @@ require_once "../utils.php";
 if($_SERVER["REQUEST_METHOD"]== "POST" && isset($_POST['email']) && !empty($_POST['email']))
 {
     $email=htmlentities($_POST['email']);
-    $stmt=execSQL('SELECT Count(*) FROM waterproviders WHERE email=?',array($email));
+    $stmt=execSQL('SELECT Count(*) FROM zonal WHERE email=?',array($email));
     if($stmt->fetchColumn() >0)
     {
         $key=hash('md5',$salt1.$email.$salt2);
         mail($email,'Reset Password : HakVilla.000webhostapp.com','Password Reset Link :
-        http://wds.com/providers/reset-password.php?email='.$email.'&key='.$key,$headers);
+        http://wds.com/zonal/reset-password.php?email='.$email.'&key='.$key,$headers);
         $_SESSION['msg']='<div class="alert alert-success">Password Reset Email sent.</div><br>';
     }
     else
@@ -38,9 +38,7 @@ $content= '
         <input type="submit" value="Reset Password" class="btn btn-primary btn-user btn-block">
         </form>
         <hr>
-        <div class="text-center">
-        <a class="small" href="register.php">Create an Account!</a>
-        </div>
+        
         <div class="text-center">
         <a class="small" href="login.php">Already have an account? Login!</a>
         </div>
