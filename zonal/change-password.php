@@ -1,11 +1,11 @@
 <?php
 require_once "../utils.php";
-check_session('waterproviders');
+check_session('zonal');
 if($_SERVER['REQUEST_METHOD']=='POST')
 {
-    $stmt=execSQL('UPDATE waterproviders SET password=? WHERE id=? and password=?',array(hash('md5',$salt1 . $_POST['new'] . $salt2),$_SESSION['id'],hash('md5',$salt1 . $_POST['old'] . $salt2)));
+    $stmt=execSQL('UPDATE zonal SET password=? WHERE id=? and password=?',array(hash('md5',$salt1 . $_POST['new'] . $salt2),$_SESSION['id'],hash('md5',$salt1 . $_POST['old'] . $salt2)));
     if($stmt->rowCount()==1)
-    {   
+    {
         $_SESSION['msg']='<div class="alert alert-success alert-dismissible fade show">Password changed succesfully!</div>';
         header('location:dashboard.php');
         exit(0);
@@ -39,7 +39,7 @@ $content=<<<_END
             <input id="submit" type="submit" value="Change Password" class="btn btn-success">
             <a href="dashboard.php" class="btn">Cancel</a>
         </form>
-    </div>
+    </div>  
 </div>
 _END;
 require_once "../templates/dash-temp.php";
