@@ -1,6 +1,6 @@
 <?php
 
-$p='http://localhost/sih';
+$p='http://localhost/SIH2020_IC470_Hail_Hydra_GitRepository_MLRIT';
 
 $salt1='';
 $salt2='';

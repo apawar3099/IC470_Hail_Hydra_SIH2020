@@ -15,10 +15,10 @@ $content=<<<_END
         Make sure to join hands with us! That is, if you want your city to sustain.
 
     </div>
-    <div class="col-sm-6">
-        <a href="customers/dashboard.php" class="btn btn-success" style="text-align: center;">Book Tanker</a>
-        <a href="user-instructions.php" class="btn btn-success" style="text-align: center;">Check User Instructions</a>
-        <a href="institute_information.php" class="btn btn-success" style="text-align: center;">Check Institute Instructions</a>
+    <div class="col-sm-6" style="display: grid;place-items: centre;align-items: centre;justify-content: center;text-align: center;">
+        <a href="customers/dashboard.php" class="btn btn-success btn-lg" style="text-align: center;">Book Tanker</a><br>
+        <a href="user-instructions.php" class="btn btn-success btn-lg" style="text-align: center;">Check User Instructions</a><br>
+        <a href="institute_information.php" class="btn btn-success btn-lg" style="text-align: center;">Check Institute Instructions</a><br>
     </div>
 </div>
 _END;

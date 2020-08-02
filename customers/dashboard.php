@@ -11,20 +11,21 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
 
 $cooldown=false;
 
-$stmt=execSQL('SELECT *,ISNULL(payment_id) as pid FROM orders WHERE customer=? AND date>?',array($_SESSION['id'],date('Y-m-d',time()-86400*7)));
+$stmt=execSQL('SELECT * FROM orders WHERE customer=? AND date>?',array($_SESSION['id'],date('Y-m-d',time()-86400*7)));
 // $stmt2=execSQL('SELECT id FROM waterproviders WHERE state=? AND city=? AND zone=? AND ward=? ORDER BY RAND() LIMIT 1',array($r['state'],$r['city'],$r['zone'],$r['ward']));
 
 if($stmt->rowCount()>0)
 {
     $cooldown=true;
     $s=$stmt->fetch(PDO::FETCH_ASSOC);
-    if($s['pid']==TRUE)
+    if($s['payment_id']=='null')
     {
-        $msg='<div class="alert alert-warning">Your last payment attemp was unsuccessful ! <a href="'.$s['url'].'">try again</a></div>';
+        $_SESSION['msg']='<div class="alert alert-warning">Your last payment attemp was unsuccessful ! <a href="'.$s['url'].'">try again</a></div>';
     }
     $form=<<<_END
         Your last order was on: {$s['date']}<br>
-        You can only book water tanker once every 7 days.{$s['payment_id']}
+        Your last innvoice id: {$s['invoice_id']}<br><br>
+        You can only book water tanker once every 7 days.
     _END;
 }
 else
@@ -78,8 +79,12 @@ else
 
 
 
-
-$msg=msg2();
+$msg='';
+if(isset($_SESSION['msg']))
+{
+    $msg= $_SESSION['msg'].'<br>';
+    unset($_SESSION['msg']);
+}
 $content=<<<_END
 {$msg}
 <div class="row">
@@ -89,8 +94,7 @@ $content=<<<_END
                 <h6 class="m-0 font-weight-bold text-primary">Instructions</h6>
             </div>
             <div class="card-body">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas facilis recusandae voluptate aliquid doloribus. Deserunt nobis inventore, animi voluptate placeat odit dolores molestiae, nesciunt voluptates aliquam sequi accusamus nostrum soluta!</p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae possimus quas sed accusantium ex! Unde eligendi delectus quas alias blanditiis dicta expedita, nulla in hic voluptatibus asperiores veritatis, fugiat nostrum!</p>
+                <p>Welcome! We are here to provide you water in the hour of need. The main idea of this system is to be able to utilise rainwater to its maximum and make it available to the people directly through our portal. We take pride in the fact that this scheme could be a life saver if implemented properly in the cities its needed the most. All we do is this, -Join hands with the institutions willing to contribute and provide them subsidy to setup the rainwater harvesting unit. - Make use of this harvested water to provide it to the people on demand. Make sure to join hands with us! That is, if you want your city to sustain.</p>
             </div>
         </div>
     </div>
