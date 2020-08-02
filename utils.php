@@ -7,6 +7,9 @@ $salt2='';
 
 $headers = "From: admin@water.coolpage.biz";
 
+$transportprice=100;
+$waterprice=100;
+
 session_start();
 
 require_once "conn.php";
@@ -18,6 +21,16 @@ function msg()
         echo $_SESSION['msg'].'<br>';
         unset($_SESSION['msg']);
     }
+}
+
+function msg2()
+{
+    if(isset($_SESSION['msg']))
+    {
+        return $_SESSION['msg'].'<br>';
+        unset($_SESSION['msg']);
+    }
+    return '';
 }
 
 function execSQL($a,$b)

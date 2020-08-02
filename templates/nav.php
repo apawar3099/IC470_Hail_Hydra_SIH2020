@@ -1,5 +1,5 @@
 <?php
-$rt='http://localhost/sih/';
+$rt='http://localhost/SIH2020_IC470_Hail_Hydra_GitRepository_MLRIT/';
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top">

@@ -5,6 +5,80 @@ check_session('customers');
 $title='Customer\'s Dashboard';
 $mindate=date('Y-m-d',time()+86400);
 $maxdate=date('Y-m-d',time()+86400*3);
+
+$stmt=$conn->query('SELECT * FROM customers WHERE id='.$_SESSION['id']);
+$r=$stmt->fetch(PDO::FETCH_ASSOC);
+
+$cooldown=false;
+
+$stmt=execSQL('SELECT *,ISNULL(payment_id) as pid FROM orders WHERE customer=? AND date>?',array($_SESSION['id'],date('Y-m-d',time()-86400*7)));
+// $stmt2=execSQL('SELECT id FROM waterproviders WHERE state=? AND city=? AND zone=? AND ward=? ORDER BY RAND() LIMIT 1',array($r['state'],$r['city'],$r['zone'],$r['ward']));
+
+if($stmt->rowCount()>0)
+{
+    $cooldown=true;
+    $s=$stmt->fetch(PDO::FETCH_ASSOC);
+    if($s['pid']==TRUE)
+    {
+        $msg='<div class="alert alert-warning">Your last payment attemp was unsuccessful ! <a href="'.$s['url'].'">try again</a></div>';
+    }
+    $form=<<<_END
+        Your last order was on: {$s['date']}<br>
+        You can only book water tanker once every 7 days.{$s['payment_id']}
+    _END;
+}
+else
+{
+    $form=<<<_END
+        <form method="post" action="start-payment.php" name="bookwater">
+            <div class="form-group">
+                <label for="date">Date of Dilivery:</label>
+                <input id="date" class="form-control" type="date" name="date" required min="{$mindate}" max="{$maxdate}">
+            </div>
+            <div class="form-group">
+                <label for="volume">Quantity of Water :</label>
+            </div>
+            <div class="form-check">
+                <input id="i1" class="form-check-input" type="radio" name="quantity" value="1">
+                <label for="i1" class="form-check-label">1 kL</label>
+            </div>
+            <div class="form-check">
+                <input id="i2" class="form-check-input" type="radio" name="quantity" value="3">
+                <label for="i2" class="form-check-label">3 kL</label>
+            </div>
+            <div class="form-check">
+                <input id="i3" class="form-check-input" type="radio" name="quantity" value="6">
+                <label for="i3" class="form-check-label">6 kL</label>
+            </div>
+            <input type="hidden" id="price" name="price" value="0">
+            <br><br>
+            <div class="form-group">
+                <label for="price">Price : Rs. <span class="text-primary text-lg" id="pricespan">0</span> </label>
+            </div>
+            <div class="text-center"><input type="submit" value="Pay" class="btn btn-success"></div>
+            <script>
+                transportprice={$transportprice};
+                waterprice={$waterprice};
+                inp=document.getElementById("price");
+                pspan=document.getElementById("pricespan");
+                var radios = document.forms["bookwater"].elements["quantity"];
+                for(var i = 0, max = radios.length; i < max; i++) {
+                    radios[i].onclick = function() {
+                        console.log(this.value);
+                        inp.value=transportprice+waterprice*this.value;
+                        pspan.innerHTML=transportprice+waterprice*this.value;
+                    }
+                }
+            </script>
+        </form>
+    _END;
+}
+
+
+
+
+
+
 $msg=msg2();
 $content=<<<_END
 {$msg}
@@ -26,33 +100,7 @@ $content=<<<_END
                 <h6 class="m-0 font-weight-bold text-primary">New Orders</h6>
             </div>
             <div class="card-body">
-                <form method="post" action="start-payment.php">
-                    <div class="form-group">
-                        <label for="date">Date of Dilivery:</label>
-                        <input id="date" class="form-control" type="date" name="date" required min="{$mindate}" max="{$maxdate}">
-                    </div>
-                    <div class="form-group">
-                        <label for="volume">Quantity of Water :</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="i1" class="form-check-input" type="radio" name="quantity" value="1">
-                        <label for="i1" class="form-check-label">1 kL</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="i2" class="form-check-input" type="radio" name="quantity" value="3">
-                        <label for="i2" class="form-check-label">3 kL</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="i3" class="form-check-input" type="radio" name="quantity" value="6">
-                        <label for="i3" class="form-check-label">6 kL</label>
-                    </div>
-                    <input type="hidden" id="price" name="price" value="0">
-                    <br><br>
-                    <div class="form-group">
-                        <label for="price">Price : Rs. <span class="text-primary text-lg" id="pricespan">0</span> </label>
-                    </div>
-                    <div class="text-center"><input type="submit" value="Pay" class="btn btn-success"></div>
-                </form>
+                {$form}
             </div>
         </div>
     </div>
