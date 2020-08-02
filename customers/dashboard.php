@@ -25,6 +25,7 @@ if($stmt->rowCount()>0)
     $form=<<<_END
         Your last order was on: {$s['date']}<br>
         Your last innvoice id: {$s['invoice_id']}<br><br>
+        Your OTP : <span class="text-lg">{$s['cotp']}</span><br><br>
         You can only book water tanker once every 7 days.
     _END;
 }

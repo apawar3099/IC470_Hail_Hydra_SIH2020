@@ -34,9 +34,9 @@ function get_payment_link()
         $code2=mt_rand(100000,999999);
         $stmt=execSQL('SELECT id FROM waterproviders WHERE state=? AND city=? AND zone=? AND ward=? ORDER BY RAND() LIMIT 1',array($r['state'],$r['city'],$r['zone'],$r['ward']));
         $w=$stmt->fetch(PDO::FETCH_ASSOC);
-        $stmt=execSQL('INSERT INTO orders VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',array(null,$_SESSION['id'],$w['id'],null,$_POST['date'],$_POST['quantity'],$_POST['price'],$d['id'],'null',stripslashes($d['short_url']),$code,$code2));
+        $stmt=execSQL('INSERT INTO orders VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',array(null,$_SESSION['id'],$w['id'],null,$_POST['date'],$_POST['quantity'],$_POST['price'],$d['id'],'null',stripslashes($d['short_url']),$code,$code2,0));
         $contents = file_get_contents('https://2factor.in/API/V1/28bf7ead-d473-11ea-9fa5-0200cd936042/SMS/+91'.$r['phone'].'/'.$code);
-        $st=execSQL('UPDATE providers SET avaiablewater=availablewater-? Where id=?',array($_POST['quantity'],$w['id']));
+        $st=execSQL('UPDATE waterproviders SET availablewater=availablewater-? Where id=?',array($_POST['quantity'],$w['id']));
         return stripslashes($d['short_url']);
     }
     curl_close($ch);
