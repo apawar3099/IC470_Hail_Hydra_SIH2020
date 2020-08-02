@@ -3,7 +3,7 @@ require_once "../utils.php";
 if($_SERVER["REQUEST_METHOD"]== "POST" && isset($_POST['password']) && !empty($_POST['password']) && isset($_POST['repassword']) && !empty($_POST['repassword']) && $_POST['password']==$_POST['repassword'] && isset($_SESSION['email']))
 {
     $pwd=hash('md5',$salt1.htmlentities($_POST['password']).$salt2);
-    $stmt=execSQL('UPDATE participants SET password=? WHERE email=?',array($pwd,$_SESSION['email']));
+    $stmt=execSQL('UPDATE waterproviders SET password=? WHERE email=?',array($pwd,$_SESSION['email']));
     $_SESSION['msg']='<div class="alert alert-success">Password successfully changed.</div><br>';
     unset($_SESSION['email']);
     header('location: login.php');
