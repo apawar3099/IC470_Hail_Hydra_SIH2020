@@ -17,6 +17,7 @@ $content=<<<_END
     </div>
     <div class="col-sm-6">
         <a href="customers/dashboard.php" class="btn btn-success" style="text-align: center;">Book Tanker</a>
+        <a href="institute_information.php" class="btn btn-success" style="text-align: center;">Institute Information</a>
     </div>
 </div>
 _END;
