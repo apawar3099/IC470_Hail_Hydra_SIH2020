@@ -7,8 +7,8 @@ if($_SERVER["REQUEST_METHOD"]== "POST" && isset($_POST['email']) && !empty($_POS
     if($stmt->fetchColumn() >0)
     {
         $key=hash('md5',$salt1.$email.$salt2);
-        mail($email,'Reset Password : HakVilla.000webhostapp.com','Password Reset Link :
-        http://wds.com/zonal/reset-password.php?email='.$email.'&key='.$key,$headers);
+        mail($email,'Reset Password : http://water.coolpage.biz/zonal/reset-password.php?email=','Password Reset Link :
+        http://water.coolpage.biz/zonal/reset-password.php?email='.$email.'&key='.$key,$headers);
         $_SESSION['msg']='<div class="alert alert-success">Password Reset Email sent.</div><br>';
     }
     else
