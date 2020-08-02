@@ -11,7 +11,7 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
 
 $cooldown=false;
 
-$stmt=execSQL('SELECT * FROM orders WHERE zone=? AND date=?',array($_SESSION['id'],CURDATE());
+$stmt=execSQL('SELECT * FROM orders WHERE zone=? AND date=?',array($_SESSION['id'],CURDATE()));
 // $stmt2=execSQL('SELECT id FROM waterproviders WHERE state=? AND city=? AND zone=? AND ward=? ORDER BY RAND() LIMIT 1',array($r['state'],$r['city'],$r['zone'],$r['ward']));
 
 if($stmt->rowCount()>0)

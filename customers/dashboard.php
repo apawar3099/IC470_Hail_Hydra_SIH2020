@@ -23,7 +23,7 @@ if($stmt->rowCount()>0)
         $_SESSION['msg']='<div class="alert alert-warning">Your last payment attemp was unsuccessful ! <a href="'.$s['url'].'">try again</a></div>';
     }
     $form=<<<_END
-        Your last order was on: {$s['date']}<br>
+        Your last order was for date: {$s['date']}<br>
         Your last innvoice id: {$s['invoice_id']}<br><br>
         Your OTP : <span class="text-lg">{$s['cotp']}</span><br><br>
         You can only book water tanker once every 7 days.
@@ -86,6 +86,12 @@ if(isset($_SESSION['msg']))
     $msg= $_SESSION['msg'].'<br>';
     unset($_SESSION['msg']);
 }
+$stmt=$conn->query('SELECT * FROM orders WHERE status=1 AND customer='.$_SESSION['id']);
+$table='';
+foreach($stmt as $x)
+{
+    $table.='<tr><td>'.$x['quantity'].'</td><td>'.$x['price'].'</td><td>'.$x['date'].'</td><td>'.$x['invoice_id'].'</td></tr>';
+}
 $content=<<<_END
 {$msg}
 <div class="row">
@@ -121,16 +127,11 @@ $content=<<<_END
                             <th>Volume</th>
                             <th>Price</th>
                             <th>Date</th>
-                            <th>Transaction Id</th>
+                            <th>Invoice Id</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                        {$table}
                     </tbody>
                 </table>
             </div>

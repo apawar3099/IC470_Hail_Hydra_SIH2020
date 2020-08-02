@@ -30,8 +30,8 @@ function get_payment_link()
        return FALSE;
     } else {
         $d= json_decode($data, TRUE);
-        $code=mt_rand(100000,999999);
-        $code2=mt_rand(100000,999999);
+        $code=mt_rand(10000000,99999999);
+        $code2=mt_rand(10000000,99999999);
         $stmt=execSQL('SELECT id FROM waterproviders WHERE state=? AND city=? AND zone=? AND ward=? ORDER BY RAND() LIMIT 1',array($r['state'],$r['city'],$r['zone'],$r['ward']));
         $w=$stmt->fetch(PDO::FETCH_ASSOC);
         $stmt=execSQL('INSERT INTO orders VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',array(null,$_SESSION['id'],$w['id'],null,$_POST['date'],$_POST['quantity'],$_POST['price'],$d['id'],'null',stripslashes($d['short_url']),$code,$code2,0));

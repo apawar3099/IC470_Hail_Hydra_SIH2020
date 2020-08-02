@@ -1,6 +1,6 @@
 <?php
 require_once "../utils.php";
-if($_SERVER["REQUEST_METHOD"]== "POST" && isset($_POST['email']) && isset($_POST['password']) && !empty($_POST['email']) && !empty($_POST['password']))
+if($_SERVER["REQUEST_METHOD"]== "POST" && isset($_POST['email']) && isset($_POST['password']) && !empty($_POST['email']) && !empty($_POST['password']) && isset($_POST['g-recaptcha-response']))
 {
     $x=login('transporter',$_POST['email'],$_POST['password']);
     if($x!==true)
@@ -46,6 +46,8 @@ $content= '
             <label class="custom-control-label" for="customCheck">Remember Me</label>
           </div>
         </div>
+        <div class="g-recaptcha" data-sitekey="6LfHdrkZAAAAAA4USEkqHpT0L5CF44KWq-Hz1k6C"></div>
+        <br>
         <input type="submit" value="Login" href="index.html" class="btn btn-primary btn-user btn-block">
       </form>
       <hr />
@@ -58,6 +60,7 @@ $content= '
     </div>
   </div>
 </div>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 _END;
 require_once "../templates/login-temp.php";
 ?>

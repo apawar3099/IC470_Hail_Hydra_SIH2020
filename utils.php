@@ -44,12 +44,18 @@ function execSQL($a,$b)
 
 function login($a,$e,$p)
 {
+    $response = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=6LfHdrkZAAAAAOGHrvpFsT9m4sXRQf1QWf4TGYCJ&response=' . urlencode($_POST['g-recaptcha-response']));
+    $responseKeys = json_decode($response,true);
+    if(!$responseKeys["success"])
+    {
+        return '<div class="alert alert-danger alert-dismissible fade show">Captcha not filled.</div>';
+    }
     $stmt=execSQL("SELECT id,name,status FROM ".$a." WHERE email=? AND password=?",array(htmlentities($e),hash('md5',$GLOBALS['salt1'].htmlentities($p).$GLOBALS['salt2'])));
     $row=$stmt->fetch(PDO::FETCH_ASSOC);
     if ( $row !== false ) {
         if($row['status']==0)
             {
-                return '<div class="alert alert-primary alert-dismissible fade show">Please verify your email before login.</div><br>';
+                return '<div class="alert alert-primary alert-dismissible fade show">Please verify your email before login.</div>';
             }
         $_SESSION['type'] = $a;
         $_SESSION['name'] = $row['name'];
@@ -58,7 +64,7 @@ function login($a,$e,$p)
     }
     else
     {
-        return '<div class="alert alert-danger alert-dismissible fade show">Invalid login credentials !</div><br>';
+        return '<div class="alert alert-danger alert-dismissible fade show">Invalid login credentials !</div>';
     }
 }
 

@@ -1,7 +1,7 @@
 <?php
 require_once "../utils.php";
 check_session('waterproviders');
-if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['updated']) and $_POST['updated']!='')
+if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['waterupdate']) && isset($_POST['updated']) and $_POST['updated']!='')
 {
     $stmt=execSQL('UPDATE waterproviders SET availablewater=? WHERE id=?',array($_POST['updated'],$_SESSION['id']));
     if($stmt->rowCount()==1)
@@ -9,8 +9,21 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['updated']) and $_POST['up
         $_SESSION['msg']='<div class="alert alert-success alert-dismissible fade show">Water availablity details updated successfully!</div>';
     }
 }
+if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['otpsubmit']) && isset($_POST['otp']) and $_POST['otp']!='')
+{
+    $stmt=execSQL('UPDATE orders SET status=1 WHERE dotp=? AND provider=? AND status=0',array($_POST['otp'],$_SESSION['id']));
+    if($stmt->rowCount()==1)
+    {
+        $stmt=execSQL('SELECT quantity FROM orders WHERE dotp=? AND provider=?',array($_POST['otp'],$_SESSION['id']));
+        $s=$stmt->fetch(PDO::FETCH_ASSOC);
+        $_SESSION['msg']='<div class="alert alert-success alert-dismissible fade show">OTP verified successfully!<br>Quantity to be supplied: '.$s['quantity'].'</div>';
+    }
+}
 $stmt=$conn->query('SELECT availablewater FROM waterproviders WHERE id='.$_SESSION['id']);
 $r=$stmt->fetch(PDO::FETCH_ASSOC);
+$stmt2=$conn->query('SELECT date,SUM(quantity) AS sq FROM `orders` WHERE provider='.$_SESSION['id'].' AND date>=CURRENT_DATE() GROUP BY date');
+$stmt3=$conn->query('SELECT SUM(quantity) AS sq,SUM(price-100) AS sp,SUM(-1*(status-1)) AS rem,count(*) as cnt FROM `orders` WHERE provider='.$_SESSION['id'].' GROUP BY date');
+$s=$stmt3->fetch(PDO::FETCH_ASSOC);
 ?>
 <html lang="en">
 <head>
@@ -21,7 +34,7 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>Provider's Dashboard</title>
 
     <!-- Custom fonts for this template-->
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -103,8 +116,7 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                        <h1 class="h3 mb-0 text-gray-800">Provider's Dashboard</h1>
                     </div>
                     <?php msg(); ?>
                     <!-- Content Row -->
@@ -116,8 +128,8 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">₹ 40,000</div>
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Water Dilivered</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?=$s['sq']?> kL</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -133,8 +145,8 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">₹ 215,000</div>
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Earnings</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">₹ <?=$s['sp']?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-rupee-sign fa-2x text-gray-300"></i>
@@ -150,15 +162,10 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Orders</div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="progress progress-sm mr-2">
-                                                        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?=$s['cnt']?></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -176,8 +183,8 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Orders</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?=$s['rem']?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -198,18 +205,6 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
@@ -234,18 +229,6 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Water Status</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
@@ -280,7 +263,7 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
                     <div class="row">
 
                         <!-- Content Column -->
-                        <div class="col-lg-6 mb-4">
+                        <div class="col-lg-5 mb-4">
 
                             <!-- Project Card Example -->
                             <div class="card shadow mb-4">
@@ -288,36 +271,44 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
                                     <h6 class="m-0 font-weight-bold text-primary">Current Orders</h6>
                                 </div>
                                 <div class="card-body row">
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card bg-warning text-white shadow">
-                                            <div class="card-body">
-                                                20/07/20
-                                                <div class="font-weight-bold">10 kL</div>
+                                    <?php
+                                    foreach($stmt2 as $x)
+                                    {
+                                        ?>
+                                        <div class="col-lg-6 mb-4">
+                                            <div class="card bg-info text-white shadow">
+                                                <div class="card-body">
+                                                    <?=$x['date']?>
+                                                    <div class="font-weight-bold"><?=$x['sq']?> kL</div>
+                                                    <div class="font-weight-bold">Rs. <?=$x['sq']*$waterprice?></div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card bg-info text-white shadow">
-                                            <div class="card-body">
-                                                21/07/20
-                                                <div class="font-weight-bold">20 kL</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="card bg-info text-white shadow">
-                                            <div class="card-body">
-                                                22/07/20
-                                                <div class="font-weight-bold">12 kL</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
+                                        <?php
+                                    }
+                                    ?>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-lg-6 mb-4">
+                        <div class="col-lg-4 mb-4">
+                        <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">OTP Verification</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form method="post" action="" name="otpform">
+                                        <div class="form-group">
+                                            <label for="otp">OTP From transporter:</label>
+                                            <input id="otp" class="form-control" type="number" name="otp" required>
+                                        </div>
+                                        <input type="submit" class="btn btn-success" value="Submit" name="otpsubmit">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 mb-4">
 
                             <!-- Illustrations -->
                             <div class="card shadow mb-4">
@@ -325,7 +316,7 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
                                     <h6 class="m-0 font-weight-bold text-primary">Water Availablity</h6>
                                 </div>
                                 <div class="card-body">
-                                    <form method="post" action="">
+                                    <form method="post" action="" name="waterform">
                                         <div class="form-group">
                                             <label for="current">Current water Availablity :</label>
                                             <input id="current" class="form-control" type="number" name="current" disabled value="<?=$r['availablewater']?>">
@@ -335,7 +326,7 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
                                             <label for="updated">Updated water Availablity:</label>
                                             <input id="updated" class="form-control" type="number" name="updated" required>
                                         </div>
-                                        <input type="submit" class="btn btn-success" value="Update">
+                                        <input type="submit" class="btn btn-success" value="Update" name="waterupdate">
                                     </form>
                                 </div>
                             </div>
@@ -362,25 +353,6 @@ $r=$stmt->fetch(PDO::FETCH_ASSOC);
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="../vendor/jquery/jquery.min.js"></script>
