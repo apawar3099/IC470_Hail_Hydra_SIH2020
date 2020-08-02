@@ -45,8 +45,8 @@ function signupO()
     $key=hash('md5',$GLOBALS['salt1'].$email.'providers'.$GLOBALS['salt2']);
     array_push($a,0,0,0);
     $stmt=execSQL("INSERT INTO customers VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",$a);
-    mail($email,'Confirmation Email : WDS.com','If You have Signed Up for WDS please verify you account by going to following link:<br><br>
-http://wds.com/organisers/verifyemail.php?email='.$email.'&key='.$key.'
+    mail($email,'Confirmation Email : WCDS.com','If You have Signed Up for WCDS please verify you account by going to following link:<br><br>
+http://water.coolpage.biz/organisers/verifyemail.php?email='.$email.'&key='.$key.'
 If you haven\'t signed up at our site please ignore this email.We wont bother You with any other mail.',$headers);
     return 1;
 }

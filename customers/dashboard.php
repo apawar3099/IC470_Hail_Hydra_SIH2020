@@ -1,8 +1,13 @@
 <?php
 require_once "../utils.php";
 check_session('customers');
+
 $title='Customer\'s Dashboard';
+$mindate=date('Y-m-d',time()+86400);
+$maxdate=date('Y-m-d',time()+86400*3);
+$msg=msg2();
 $content=<<<_END
+{$msg}
 <div class="row">
     <div class="col-md-6">
         <div class="card shadow mb-4 ">
@@ -21,12 +26,10 @@ $content=<<<_END
                 <h6 class="m-0 font-weight-bold text-primary">New Orders</h6>
             </div>
             <div class="card-body">
-                Water available in your area: 1000<br>
-                Price per tanker: Rs. 1000<br><br>
-                <form method="post" action="">
+                <form method="post" action="start-payment.php">
                     <div class="form-group">
                         <label for="date">Date of Dilivery:</label>
-                        <input id="date" class="form-control" type="date" name="date" required min="2020-08-01">
+                        <input id="date" class="form-control" type="date" name="date" required min="{$mindate}" max="{$maxdate}">
                     </div>
                     <div class="form-group">
                         <label for="volume">Quantity of Water :</label>
@@ -36,20 +39,17 @@ $content=<<<_END
                         <label for="i1" class="form-check-label">1 kL</label>
                     </div>
                     <div class="form-check">
-                        <input id="i2" class="form-check-input" type="radio" name="quantity" value="2">
-                        <label for="i2" class="form-check-label">2 kL</label>
+                        <input id="i2" class="form-check-input" type="radio" name="quantity" value="3">
+                        <label for="i2" class="form-check-label">3 kL</label>
                     </div>
                     <div class="form-check">
-                        <input id="i3" class="form-check-input" type="radio" name="quantity" value="3">
-                        <label for="i3" class="form-check-label">3 kL</label>
+                        <input id="i3" class="form-check-input" type="radio" name="quantity" value="6">
+                        <label for="i3" class="form-check-label">6 kL</label>
                     </div>
-                    <div class="form-check">
-                        <input id="i4" class="form-check-input" type="radio" name="quantity" value="4">
-                        <label for="i4" class="form-check-label">4 kL</label>
-                    </div>
+                    <input type="hidden" id="price" name="price" value="0">
                     <br><br>
                     <div class="form-group">
-                        <label for="price">Price : Rs. <span class="text-primary text-lg">1000</span> </label>
+                        <label for="price">Price : Rs. <span class="text-primary text-lg" id="pricespan">0</span> </label>
                     </div>
                     <div class="text-center"><input type="submit" value="Pay" class="btn btn-success"></div>
                 </form>
@@ -84,6 +84,7 @@ $content=<<<_END
         </div>
     </div>
 </div>
+
 _END;
 require_once "../templates/dash-temp.php";
 ?>
