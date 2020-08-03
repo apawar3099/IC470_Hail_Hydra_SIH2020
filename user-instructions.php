@@ -18,7 +18,7 @@ $content=<<<_END
 <h4>Registration Instrutions:</h4>
 <p>
 	<ul>
-		<li> For registering you must fill your water connection details, that includes your meter number which has been alloted to you by the water department. If a metered connection has not yet been installed at your current address, then you may avail delivery facility by filling out <a href="#">this</a> form.</li>
+		<li> For registering you must fill your water connection details, that includes your meter number which has been alloted to you by the water department. If a metered connection has not yet been installed at your current address, then you may avail delivery facility by filling out this form.</li>
 		<li> Additional details like your address and phone number registered with the water department will also be required.</li>
 		<li> After registration all communication will be directed to the registered phone number.</li>
 	</ul>
