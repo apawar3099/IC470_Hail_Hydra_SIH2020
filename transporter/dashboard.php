@@ -11,7 +11,7 @@ if($_SERVER["REQUEST_METHOD"]== "POST" && isset($_POST['id']) && isset($_POST['o
         $_SESSION['msg']='<div class="alert alert-success alert-dismissible fade show">OTP verified successfully!<br>Quantity to be supplied: '.$s['quantity'].'</div>';
     }
 }
-$row=$conn->query('SELECT p.name as pn,p.address as pa,p.pincode as pp,dotp,p.phone as pph,c.name as cn,c.address as ca,c.pincode as cp,c.phone as cph,o.id as oid FROM orders o INNER JOIN customers c ON o.customer=c.id INNER JOIN waterproviders p ON o.provider=p.id WHERE o.status=1 AND o.transporter='.$_SESSION['id']);
+$row=$conn->query('SELECT p.name as pn,p.address as pa,p.pincode as pp,dotp,p.phone as pph,c.name as cn,c.address as ca,c.pincode as cp,c.phone as cph,o.id as oid FROM orders o INNER JOIN customers c ON o.customer=c.id INNER JOIN waterproviders p ON o.provider=p.id WHERE o.status=1 AND o.date=CURDATE() AND o.transporter='.$_SESSION['id']);
 $data='';
 foreach($row as $r)
 {
@@ -44,7 +44,7 @@ foreach($row as $r)
         </div>
     _END;
 }
-$row=$conn->query('SELECT p.name as pn,p.address as pa,p.pincode as pp,dotp,p.phone as pph,c.name as cn,c.address as ca,c.pincode as cp,c.phone as cph FROM orders o INNER JOIN customers c ON o.customer=c.id INNER JOIN waterproviders p ON o.provider=p.id WHERE o.status=0 AND o.transporter='.$_SESSION['id']);
+$row=$conn->query('SELECT p.name as pn,p.address as pa,p.pincode as pp,dotp,p.phone as pph,c.name as cn,c.address as ca,c.pincode as cp,c.phone as cph FROM orders o INNER JOIN customers c ON o.customer=c.id INNER JOIN waterproviders p ON o.provider=p.id WHERE o.status=0 AND o.date=CURDATE() AND o.transporter='.$_SESSION['id']);
 foreach($row as $r)
 {
     $data.=<<<_END

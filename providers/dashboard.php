@@ -11,7 +11,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['waterupdate']) && isset($
 }
 if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['otpsubmit']) && isset($_POST['otp']) and $_POST['otp']!='')
 {
-    $stmt=execSQL('UPDATE orders SET status=1 WHERE dotp=? AND provider=? AND status=0',array($_POST['otp'],$_SESSION['id']));
+    $stmt=execSQL('UPDATE orders SET status=1,pickuptime=? WHERE dotp=? AND provider=? AND status=0',array(time(),$_POST['otp'],$_SESSION['id']));
     if($stmt->rowCount()==1)
     {
         $stmt=execSQL('SELECT quantity FROM orders WHERE dotp=? AND provider=?',array($_POST['otp'],$_SESSION['id']));
