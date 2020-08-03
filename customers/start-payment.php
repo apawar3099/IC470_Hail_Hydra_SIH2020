@@ -32,9 +32,9 @@ function get_payment_link()
         $d= json_decode($data, TRUE);
         $code=mt_rand(10000000,99999999);
         $code2=mt_rand(10000000,99999999);
-        $stmt=execSQL('SELECT id FROM waterproviders WHERE state=? AND city=? AND zone=? AND ward=? ORDER BY RAND() LIMIT 1',array($r['state'],$r['city'],$r['zone'],$r['ward']));
+        $stmt=execSQL('SELECT id FROM waterproviders WHERE state=? AND city=? AND zone=? AND ward=? AND status=1 ORDER BY RAND() LIMIT 1',array($r['state'],$r['city'],$r['zone'],$r['ward']));
         $w=$stmt->fetch(PDO::FETCH_ASSOC);
-        $stmt=execSQL('SELECT id FROM transporter WHERE state=? AND city=? AND zone=? AND ward=? ORDER BY RAND() LIMIT 1',array($r['state'],$r['city'],$r['zone'],$r['ward']));
+        $stmt=execSQL('SELECT id FROM transporter WHERE state=? AND city=? AND zone=? AND status=1 ORDER BY RAND() LIMIT 1',array($r['state'],$r['city'],$r['zone']));
         $x=$stmt->fetch(PDO::FETCH_ASSOC);
         $stmt=execSQL('INSERT INTO orders VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',array(null,$_SESSION['id'],$w['id'],$x['id'],$_POST['date'],$_POST['quantity'],$_POST['price'],$d['id'],'null',stripslashes($d['short_url']),$code,$code2,0,time(),0,0));
         $contents = file_get_contents('https://2factor.in/API/V1/28bf7ead-d473-11ea-9fa5-0200cd936042/SMS/+91'.$r['phone'].'/'.$code);

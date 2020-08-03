@@ -3,20 +3,33 @@ require_once "../utils.php";
 check_session('zonal');
 
 $title='Zonal Office\'s Dashboard';
-$mindate=date('Y-m-d',time()+86400);
-$maxdate=date('Y-m-d',time()+86400*3);
 
 $stmt=$conn->query('SELECT * FROM transporter');
-// $r=$stmt->fetch(PDO::FETCH_ASSOC);
 
 $data='';
 foreach($stmt as $x)
 {
+    $btn='';
+    if($x['status']==3)
+    {
+        $btn='<a href="switch.php?switch=on&id='.$x['id'].'" class="btn btn-success">allow</a>';
+    }
+    else
+    {
+        $stmt=execSQL('SELECT id FROM transporter WHERE state=? AND city=? AND zone=? AND status=1',array($x['state'],$x['city'],$x['zone']));
+        if($stmt->rowCount()>1)
+        {
+            $btn='<a href="switch.php?switch=off&id='.$x['id'].'" class="btn btn-warning">revoke</a>';
+        }
+    }
     $data.='<tr>
     <td>'.$x['id'].'</td>
     <td>'.$x['name'].'</td>
     <td>'.$x['email'].'</td>
+    <td>'.$x['city'].'</td>
+    <td>'.$x['zone'].'</td>
     <td><a href="http://maps.google.com/maps?q='.$x['lat'].','.$x['lng'].'" target="_blank">Google Maps</a></td>
+    <td>'.$btn.'</td>
 </tr>';
 }
 
@@ -42,7 +55,10 @@ $content=<<<_END
                             <th>Id</th>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>City</th>
+                            <th>Zone</th>
                             <th>location Id</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
