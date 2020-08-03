@@ -23,7 +23,7 @@ if($stmt->rowCount()>0)
         $_SESSION['msg']='<div class="alert alert-warning">Your last payment attemp was unsuccessful ! <a href="'.$s['url'].'">try again</a></div>';
     }
     $form=<<<_END
-        Your last order was for date: {$s['date']}<br>
+        Your last order was delivered on date: {$s['date']}<br>
         Your last innvoice id: {$s['invoice_id']}<br><br>
         Your OTP : <span class="text-lg">{$s['cotp']}</span><br><br>
         You can only book water tanker once every 7 days.
@@ -34,7 +34,7 @@ else
     $form=<<<_END
         <form method="post" action="start-payment.php" name="bookwater">
             <div class="form-group">
-                <label for="date">Date of Dilivery:</label>
+                <label for="date">Date of Delivery:</label>
                 <input id="date" class="form-control" type="date" name="date" required min="{$mindate}" max="{$maxdate}">
             </div>
             <div class="form-group">
