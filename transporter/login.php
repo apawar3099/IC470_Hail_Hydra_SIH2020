@@ -48,7 +48,7 @@ $content= '
         </div>
         <div class="g-recaptcha" data-sitekey="6LfHdrkZAAAAAA4USEkqHpT0L5CF44KWq-Hz1k6C"></div>
         <br>
-        <input type="submit" value="Login" href="index.html" class="btn btn-primary btn-user btn-block">
+        <input type="submit" value="Login" class="btn btn-primary btn-user btn-block">
       </form>
       <hr />
       <div class="text-center">
