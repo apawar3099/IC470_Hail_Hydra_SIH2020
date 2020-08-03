@@ -1,3 +1,4 @@
+<script src='https://www.google.com/recaptcha/api/siteverify?secret=6LfHdrkZAAAAAOGHrvpFsT9m4sXRQf1QWf4TGYCJ&response=' async defer></script>
 <?php
 $title='FeedBack';
 $content=<<<_END
@@ -16,9 +17,11 @@ $content=<<<_END
     <input type="text" class="form-control" id="orderNumber" placeholder="order number">
   </div>
   <div class="form-group">
-    <label for="exampleFormControlTextarea1">Example textarea</label>
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="feedback"></textarea>
+    <label for="exampleFormControlTextarea1">Your suggestions/feedback/complaints </label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Type your response here..."></textarea>
   </div>
+  <div class="g-recaptcha" data-sitekey="your_site_key"></div>
+  <br/>
   <button type="button" class="btn btn-primary btn-lg">Submit</button>
 </form>
 _END;
