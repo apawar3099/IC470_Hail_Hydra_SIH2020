@@ -7,9 +7,9 @@ $content=<<<_END
 <h4>General Instructions:</h4>
 <p>	
 	<ul>
-		<li>If you are new to this website, you can register <a href="#">here</a></li>
-		<li>If you have already registered with us, then login <a href="#">here</a></li>
-		<li> Once you have logged in you can book water by clicking on <a href="#">book tanker<a>. After that you will be redirected to the payment portal.</li>
+		<li>If you are new to this website, you can register <a href="http://water.coolpage.biz/customers/register.php">here</a></li>
+		<li>If you have already registered with us, then login <a href="http://water.coolpage.biz/customers/login.php">here</a></li>
+		<li> Once you have logged in you can book water by clicking on book tanker. After that you will be redirected to the payment portal.</li>
 		<li> After successfull payment you will recieve a confirmation regarding the same via SMS.</li>
 		<li>Now have done all you had to do, now it is our turn to make sure the water reaches you on time, so just sit back and relax. </li>
 	</ul>
