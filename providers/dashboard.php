@@ -22,8 +22,10 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['otpsubmit']) && isset($_P
 $stmt=$conn->query('SELECT availablewater FROM waterproviders WHERE id='.$_SESSION['id']);
 $r=$stmt->fetch(PDO::FETCH_ASSOC);
 $stmt2=$conn->query('SELECT date,SUM(quantity) AS sq FROM `orders` WHERE provider='.$_SESSION['id'].' AND date>=CURRENT_DATE() GROUP BY date');
-$stmt3=$conn->query('SELECT SUM(quantity) AS sq,SUM(price-100) AS sp,SUM(-1*(status-1)) AS rem,count(*) as cnt FROM `orders` WHERE provider='.$_SESSION['id'].' GROUP BY date');
+$stmt3=$conn->query('SELECT SUM(quantity) AS sq,SUM(price-100) AS sp,count(*) as cnt FROM `orders` WHERE provider='.$_SESSION['id']);
 $s=$stmt3->fetch(PDO::FETCH_ASSOC);
+$stmt3=$conn->query('SELECT count(*) as cnt FROM `orders` WHERE status=0 AND provider='.$_SESSION['id']);
+$s2=$stmt3->fetch(PDO::FETCH_ASSOC);
 ?>
 <html lang="en">
 <head>
@@ -184,7 +186,7 @@ $s=$stmt3->fetch(PDO::FETCH_ASSOC);
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Orders</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?=$s['rem']?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?=$s2['cnt']?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -197,16 +199,13 @@ $s=$stmt3->fetch(PDO::FETCH_ASSOC);
 
                     <!-- Content Row -->
 
-                    <div class="row">
+                    <!-- <div class="row">
 
-                        <!-- Area Chart -->
                         <div class="col-xl-8 col-lg-7">
                             <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
                                 </div>
-                                <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-area">
                                         <div class="chartjs-size-monitor">
@@ -223,14 +222,11 @@ $s=$stmt3->fetch(PDO::FETCH_ASSOC);
                             </div>
                         </div>
 
-                        <!-- Pie Chart -->
                         <div class="col-xl-4 col-lg-5">
                             <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Water Status</h6>
                                 </div>
-                                <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-pie pt-4 pb-2">
                                         <div class="chartjs-size-monitor">
@@ -257,9 +253,8 @@ $s=$stmt3->fetch(PDO::FETCH_ASSOC);
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>--->
 
-                    <!-- Content Row -->
                     <div class="row">
 
                         <!-- Content Column -->

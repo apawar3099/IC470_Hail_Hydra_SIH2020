@@ -86,11 +86,11 @@ if(isset($_SESSION['msg']))
     $msg= $_SESSION['msg'].'<br>';
     unset($_SESSION['msg']);
 }
-$stmt=$conn->query('SELECT * FROM orders WHERE status=1 AND customer='.$_SESSION['id']);
+$stmt=$conn->query('SELECT * FROM orders WHERE status=2 AND customer='.$_SESSION['id']);
 $table='';
 foreach($stmt as $x)
 {
-    $table.='<tr><td>'.$x['quantity'].'</td><td>'.$x['price'].'</td><td>'.$x['date'].'</td><td>'.$x['invoice_id'].'</td></tr>';
+    $table.='<tr><td>'.$x['quantity'].'kL</td><td>Rs. '.$x['price'].'</td><td>'.$x['date'].'</td><td>'.$x['invoice_id'].'</td></tr>';
 }
 $content=<<<_END
 {$msg}
